@@ -55,15 +55,19 @@ func InitLcd(addr uint8, bus int) (*LCD, error) {
 func (LCD *LCD) Write(line int, data [20]byte) error {
 	var err error
 	// Set lines
+	_, err = LCD.I2C.WriteBytes([]byte{0x00, 0x80})
+	if err != nil {
+		return err
+	}
 	switch line {
 	case 1:
-		_, err = LCD.I2C.WriteBytes([]byte{0x80, 0x00})
+		_, err = LCD.I2C.WriteBytes([]byte{0x00, 0x00})
 	case 2:
-		_, err = LCD.I2C.WriteBytes([]byte{0x80, 0x40})
+		_, err = LCD.I2C.WriteBytes([]byte{0x00, 0x40})
 	case 3:
-		_, err = LCD.I2C.WriteBytes([]byte{0x80, 0x14})
+		_, err = LCD.I2C.WriteBytes([]byte{0x00, 0x14})
 	case 4:
-		_, err = LCD.I2C.WriteBytes([]byte{0x80, 0x54})
+		_, err = LCD.I2C.WriteBytes([]byte{0x00, 0x54})
 	default:
 		return fmt.Errorf("Error: Undefined Line Number")
 	}
