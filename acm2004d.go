@@ -1,6 +1,7 @@
 package acm2004d
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/d2r2/go-i2c"
@@ -51,8 +52,21 @@ func InitLcd(addr uint8, bus int) (*LCD, error) {
 	return res, nil
 }
 
-func (LCD *LCD) Write(data [20]byte) error {
-	_, err := LCD.I2C.WriteBytes([]byte{0x80, 0x00})
+func (LCD *LCD) Write(line int, data [20]byte) error {
+	var err error
+	// Set lines
+	switch line {
+	case 1:
+		_, err = LCD.I2C.WriteBytes([]byte{0x80, 0x00})
+	case 2:
+		_, err = LCD.I2C.WriteBytes([]byte{0x80, 0x40})
+	case 3:
+		_, err = LCD.I2C.WriteBytes([]byte{0x80, 0x14})
+	case 4:
+		_, err = LCD.I2C.WriteBytes([]byte{0x80, 0x54})
+	default:
+		return fmt.Errorf("Error: Undefined Line Number")
+	}
 	if err != nil {
 		return err
 	}
